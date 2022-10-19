@@ -1,24 +1,24 @@
 ## data we need to track:
 
-> solution
+> ### solution
 >
 > > 5 letter string, e.g. 'drain'
 
-> past guesses
+> ### past guesses
 >
 > > an array of past guesses
 > > each past guess is an array of letter objects [{}, {}, {}, {}, {}]
 > > each object represents a letter in the guess word {letter: 'a', color: 'yellow'}
 
-> current guess
+> ### current guess
 >
 > > string 'hello'
 
-> keypad letters
+> ### keypad letters
 >
 > > array of letter objects [{key: 'a', color: 'green'}, {}, {} ...]
 
-> number of turns
+> ### number of turns
 >
 > > an integer 0 - 6
 
@@ -42,7 +42,7 @@
 > ### partial matches (in the solution but not the correct position) are yellow
 
 > ### non-matches (not in the solution at all) are grey
-
+>
 > > the guess is added to the grid with the correct colors
 > > the current guess moves to the next row
 > > the keypad letters are updated (colors)
