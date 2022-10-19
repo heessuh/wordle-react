@@ -2,20 +2,32 @@ import { useState, useEffect } from "react"
 
 function App() {
   const [solution, setSolution] = useState(null)
+  const [fetchError, setFetchError] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    fetch("http://localhost:3001/solutions")
-      .then((res) => res.json())
-      .then((json) => {
-        //random chooser from solution array
-        const randomSolution = json[Math.floor(Math.random() * json.length)]
+    const fetchSolution = async () => {
+      try {
+        const res = await fetch("http://localhost:3001/solutions")
+        if (!res.ok) throw Error("Did not receive expected data.")
+        const items = await res.json()
+        const randomSolution = items[Math.floor(Math.random() * items.length)]
         setSolution(randomSolution.word)
-      })
+        setFetchError(null)
+      } catch (err) {
+        setFetchError(err.message)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    setTimeout(() => fetchSolution(), 1000)
   }, [setSolution])
   return (
     <div className="App">
+      {isLoading && <p>Loading Items...</p>}
+      {fetchError && <p style={{ color: "red" }}>{`Error: ${fetchError}`}</p>}
       <h1>Wordle (Lingo)</h1>
-      {solution && <div>Solution is: {solution}</div>}
+      {!fetchError && !isLoading && <div>Solution is: {solution}</div>}
     </div>
   )
 }
