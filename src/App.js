@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import Wordle from "./components/Wordle"
 
 function App() {
   const [solution, setSolution] = useState(null)
@@ -27,7 +28,7 @@ function App() {
       {isLoading && <p>Loading Items...</p>}
       {fetchError && <p style={{ color: "red" }}>{`Error: ${fetchError}`}</p>}
       <h1>Wordle (Lingo)</h1>
-      {!fetchError && !isLoading && <div>Solution is: {solution}</div>}
+      {!fetchError && !isLoading && solution && <Wordle solution={solution} />}
     </div>
   )
 }
