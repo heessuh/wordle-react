@@ -4,13 +4,34 @@ const useWordle = (solution) => {
   const [turn, setTurn] = useState(0)
   const [currentGuess, setCurrentGuess] = useState("")
   const [guesses, setGuesses] = useState([]) // each guess is an array
-  const [history, setHistory] = useState(["hello", "ninja"]) // each guess is a string
+  const [history, setHistory] = useState([]) // each guess is a string
   const [isCorrect, setIsCorrect] = useState(false)
 
   // format a guess into an array of letter objects
   // e.g. [{key: 'a', color: 'yellow'}]
   const formatGuess = () => {
-    console.log("formatting the guess... ", currentGuess)
+    let solutionArray = [...solution] //convert solution to array of letters
+    let formattedGuess = [...currentGuess].map((l) => {
+      return { key: l, color: "grey" } //convert guess to array or letters w default color grey
+    })
+
+    // find any green letters
+    formattedGuess.forEach((l, i) => {
+      if (solution[i] === l.key) {
+        formattedGuess[i].color = "green"
+        solutionArray[i] = null //remove guess from array to prevent double dipping later
+      }
+    })
+
+    // find any yellow letters
+    formattedGuess.forEach((l, i) => {
+      if (solutionArray.includes(l.key) && l.color !== "green") {
+        formattedGuess[i].color = "yellow"
+        solutionArray[solutionArray.indexOf(l.key)] = null
+      }
+    })
+
+    return formattedGuess
   }
 
   // add a new guess to the guesses state
@@ -21,28 +42,25 @@ const useWordle = (solution) => {
   // handle keyup event & track current guess
   // if user presses enter, add the new guess
   const handleKeyup = ({ key }) => {
-    console.log("key pressed - ", key)
-
     if (key === "Enter") {
-      //turn is less than 5
+      // only add guess if turn is less than 5
       if (turn > 5) {
-        console.log("You used all your turns.")
+        console.log("you used all your guesses!")
         return
       }
-      //less than 5 characters
-      if (currentGuess.length < 5) {
-        console.log("Your guess must have 5 characters.")
-        return
-      }
-      //have already used this word
+      // do not allow duplicate words
       if (history.includes(currentGuess)) {
-        console.log("You have tried that guess already.")
+        console.log("you already tried that word.")
         return
       }
-      //if all above conditions are ok finally submit the guess
-      formatGuess()
+      // check word is 5 chars
+      if (currentGuess.length !== 5) {
+        console.log("word must be 5 chars.")
+        return
+      }
+      const formatted = formatGuess()
+      console.log(formatted)
     }
-
     if (key === "Backspace") {
       setCurrentGuess((prev) => prev.slice(0, -1))
       return
